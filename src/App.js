@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.css';
 
 function SubTasks({ subTasks, setSubTasks, addSubTask }) {
@@ -113,8 +113,18 @@ function ToDoList({ tasks, setTasks }) {
 }
 
 function App() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(() => {
+    // Чтение данных из localStorage при инициализации
+    const savedTasks = localStorage.getItem('tasks');
+    return savedTasks ? JSON.parse(savedTasks) : [];
+  });
+
   const [newTask, setNewTask] = useState('');
+
+  // Сохранение данных в localStorage при каждом обновлении tasks
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   const addTask = () => {
     if (newTask.trim() !== '') {
